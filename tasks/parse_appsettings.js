@@ -15,7 +15,8 @@ var vm = require('vm'),
     path = require('path'),
     async = require('async'),
     done,
-    config; 
+    config,
+    _grunt; 
 
 
 
@@ -84,6 +85,12 @@ var writeFile = function(err, newPaths) {
     requireConfig = requireConfig.replace(fnRegex, cleanFn(fn));
     output = output.concat(requireConfig, '\n', requireFn);
 
+   
+    //Pass the new name of appsettings back to grunt
+    _grunt.config.set('appsettings', {
+        fileName: appsettingsName + '.js'
+    });
+    
     //Write the output to a file and call the grunt 
     //done function to signal we're finished.
     fs.writeFile('../build-tmp/js/core/appsettings.js', output, done);
@@ -100,6 +107,7 @@ module.exports = function(grunt) {
         //Signal grunt that this task is async, and get a callback to 
         //call when it's done
         done = this.async();
+        _grunt = grunt;
 
         //Read Appsettings in from the disk
         fs.readFile('../build-tmp/js/core/appsettings.js', 'utf8', function(err, data) {
