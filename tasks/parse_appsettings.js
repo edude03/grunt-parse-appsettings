@@ -74,6 +74,19 @@ var writeFile = function(err, newPaths) {
     //Replace the updated paths
     sandbox.require._config.paths = newPaths;
 
+    //This is what we'll use as the hash for the appsettings, even though
+    //once it's written to disk the hash will be different
+     /* Update the hash of appsettings before it's written to disk */
+    //TODO: Refactor this out into a reusable function since
+    //this is also done in the async.reduce callback
+    var hashSum = crypto.createHash('sha1').update(JSON.stringify(sandbox.require._config));
+    var hash = hashSum.digest('hex').substr(0, 8);
+    var appsettingsName = util.format('%s.appsettings', hash);
+
+    //Update the hash of the appsettings
+    //TODO: Fix instance of hardcoding
+    sandbox.require._config.paths['appsettings'] = 'js/core/' + appsettingsName;
+
 
     sandbox.require._config.config.text.onXhrComplete = sandbox.require._config.config.text.onXhrComplete.toString();
 
@@ -93,7 +106,7 @@ var writeFile = function(err, newPaths) {
     
     //Write the output to a file and call the grunt 
     //done function to signal we're finished.
-    fs.writeFile('../build-tmp/js/core/appsettings.js', output, done);
+    fs.writeFile('../build-tmp/js/core/' + appsettingsName + '.js', output, done);
 }
 
 
