@@ -103,7 +103,7 @@ var sandbox = {
 
 
 module.exports = function(grunt) {
-    grunt.registerMultiTask('parse-appsettings', 'Parses a require.js data-main file', function() {
+    grunt.registerTask('parse-appsettings', 'Parses a require.js data-main file', function() {
         //Signal grunt that this task is async, and get a callback to 
         //call when it's done
         done = this.async();
