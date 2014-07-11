@@ -102,7 +102,6 @@ module.exports = function(grunt) {
         done = this.async();
 
         //Read Appsettings in from the disk
-        console.log('test');
         fs.readFile('../build-tmp/js/core/appsettings.js', 'utf8', function(err, data) {
             if (err) {throw err}
             //Excute the appsettings inside a sandbox so we can extract
